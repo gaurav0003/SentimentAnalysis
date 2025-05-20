@@ -1,4 +1,4 @@
-Date,Time,Session,Greed Index,Fear Index,Btc Current Price,BtcDom Current Price
+Date,Time,Session,GreedIndex,FearIndex,Btc Current Price,BtcDom Current Price
 2024-08-10,09:48:38,Asia Session (9.30 am),0.00334206,-0.00358405,60327.81,2805.4
 2024-08-10,13:53:20,UK Session (1.30 pm),0.00518117,-0.00646313,60759.32,2802.6
 2024-08-10,17:44:56,UK Session (5.30 pm),0.0039198,-0.00365919,60833.66,2799.1
