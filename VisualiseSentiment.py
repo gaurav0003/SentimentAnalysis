@@ -7,7 +7,7 @@ from datetime import datetime
 st.set_page_config(page_title="Dark Sentiment Dashboard", layout="wide")
 
 # Example CSV source
-CSV_URL = 'https://raw.githubusercontent.com/yourusername/yourrepo/main/crypto_data.csv'
+CSV_URL = 'https://raw.githubusercontent.com/gaurav0003/SentimentAnalysis/refs/heads/main/crypto_data.csv'
 df = pd.read_csv(CSV_URL)
 
 df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'], format='%Y-%m-%d %H:%M:%S')
