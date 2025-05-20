@@ -23,13 +23,13 @@ end_datetime = datetime.combine(end_date, datetime.max.time())
 filtered_df = df[(df['DateTime'] >= start_datetime) & (df['DateTime'] <= end_datetime)]
 
 if not filtered_df.empty:
-    positive_funding = filtered_df['GreedIndex']
-    negative_funding = filtered_df['FearIndex']
+    greed_index = filtered_df['GreedIndex']
+    fear_index = filtered_df['FearIndex']
     datetimes = filtered_df['DateTime']
     sessions = filtered_df['Session']
 
-    total_positive = positive_funding.sum()
-    total_negative = abs(negative_funding.sum())
+    total_positive = greed_index.sum()
+    total_negative = abs(fear_index.sum())
 
     session_colors = {
         'Asia Session (5.30 am)': '#22272E',
@@ -62,7 +62,7 @@ if not filtered_df.empty:
     ax_pie.set_title("Sentiment Share", fontsize=15, color='white')
 
     # Bar Chart
-    ax_bar.set_ylim(min(negative_funding.min(), 0) * 1.2, positive_funding.max() * 1.2)
+    ax_bar.set_ylim(min(fear_index.min(), 0) * 1.2, greed_index.max() * 1.2)
     bar_width = 0.8
     index = range(len(datetimes))
 
@@ -74,9 +74,9 @@ if not filtered_df.empty:
                                                color=session_colors[session],
                                                alpha=0.3))
 
-    ax_bar.bar(index, positive_funding, bar_width, label='Bullish',
+    ax_bar.bar(index, greed_index, bar_width, label='Bullish',
                color='#00FFB3', alpha=0.9, edgecolor='white')
-    ax_bar.bar(index, negative_funding, bar_width, label='Bearish',
+    ax_bar.bar(index, fear_index, bar_width, label='Bearish',
                color='#FF4C75', alpha=0.9, edgecolor='white')
 
     ax_bar.set_xlabel("Datetime", color='white')
