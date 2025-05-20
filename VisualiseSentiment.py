@@ -23,8 +23,8 @@ end_datetime = datetime.combine(end_date, datetime.max.time())
 filtered_df = df[(df['DateTime'] >= start_datetime) & (df['DateTime'] <= end_datetime)]
 
 if not filtered_df.empty:
-    positive_funding = filtered_df['Greed']
-    negative_funding = filtered_df['Fear']
+    positive_funding = filtered_df['Positive Funding Rate ']
+    negative_funding = filtered_df['Negative Funding Rate']
     datetimes = filtered_df['DateTime']
     sessions = filtered_df['Session']
 
