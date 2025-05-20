@@ -7,7 +7,7 @@ from datetime import datetime
 st.set_page_config(page_title="Dark Sentiment Dashboard", layout="wide")
 
 # Example CSV source
-CSV_URL = 'https://raw.githubusercontent.com/yourusername/yourrepo/main/crypto_data.csv'
+CSV_URL = 'https://raw.githubusercontent.com/gaurav0003/SentimentAnalysis/refs/heads/main/crypto_data.csv'
 df = pd.read_csv(CSV_URL)
 
 df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'], format='%Y-%m-%d %H:%M:%S')
@@ -23,8 +23,8 @@ end_datetime = datetime.combine(end_date, datetime.max.time())
 filtered_df = df[(df['DateTime'] >= start_datetime) & (df['DateTime'] <= end_datetime)]
 
 if not filtered_df.empty:
-    positive_funding = filtered_df['Positive Funding Rate ']
-    negative_funding = filtered_df['Negative Funding Rate']
+    positive_funding = filtered_df['Greed Index']
+    negative_funding = filtered_df['Fear Index']
     datetimes = filtered_df['DateTime']
     sessions = filtered_df['Session']
 
