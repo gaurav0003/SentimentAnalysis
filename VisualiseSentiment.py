@@ -1,19 +1,22 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import telegram
-from telegram import InputFile
-import io
-import asyncio
+from datetime import datetime
 
 # Load the dataset
 file_path = 'crypto_data.csv'
 df = pd.read_csv(file_path)
 
-# Convert and filter dates
+# Convert Date and Time columns into a single DateTime column
 df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'], format='%Y-%m-%d %H:%M:%S')
-start_datetime = pd.to_datetime("10-05-2025 01:30", format='%d-%m-%Y %H:%M')
-end_datetime = pd.to_datetime("14-05-2025 21:30", format='%d-%m-%Y %H:%M')
+
+# Take date input from the user
+start_date_str = input("Enter start datetime (dd-mm-yyyy HH:MM): ")
+end_date_str = input("Enter end datetime (dd-mm-yyyy HH:MM): ")
+start_datetime = datetime.strptime(start_date_str, "%d-%m-%Y %H:%M")
+end_datetime = datetime.strptime(end_date_str, "%d-%m-%Y %H:%M")
+
+# Filter the dataframe
 filtered_df = df[(df['DateTime'] >= start_datetime) & (df['DateTime'] <= end_datetime)]
 
 if not filtered_df.empty:
@@ -46,7 +49,7 @@ if not filtered_df.empty:
     fig.text(0.5, 0.94, f"Data from {start_datetime.strftime('%d-%b-%Y')} to {end_datetime.strftime('%d-%b-%Y')}",
              ha='center', fontsize=11, color='#555555')
 
-    # Add watermark above the pie chart
+    # Watermark
     fig.text(0.5, 0.78, 'Gaurav Invests',
              fontsize=42, color='gray', alpha=0.08,
              rotation=25, ha='center', va='center')
@@ -58,7 +61,7 @@ if not filtered_df.empty:
                                           colors=pie_colors,
                                           autopct='%1.2f%%',
                                           startangle=140,
-                                          radius=1.2,  # increased size
+                                          radius=1.2,
                                           wedgeprops={'edgecolor': 'white', 'linewidth': 1.2},
                                           textprops={'fontsize': 12})
 
@@ -107,25 +110,9 @@ if not filtered_df.empty:
 
     plt.tight_layout(pad=3.0, rect=[0, 0.04, 1, 0.92])
 
-    # Save & Send to Telegram
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
-    buf.seek(0)
-
-    async def send_photo():
-        bot_token = "6474856080:AAHLfVXig8ARfp7hFIlwahZjIoEtqZru0vw"
-        chat_id = "541214837"
-
-        # Original bot
-        # bot_token = '6443764946:AAGXYWCwn_A_-NV--vXBAzXkrY0gnwjQ6QY'
-        # chat_id = '541214837'
-        bot = telegram.Bot(token=bot_token)
-        await bot.send_photo(chat_id=chat_id,
-                             photo=InputFile(buf, filename='premium_final_chart.png'),
-                             caption=f'📊 Retail Sentiment: {start_datetime.date()} to {end_datetime.date()}')
-
-    asyncio.run(send_photo())
-    buf.close()
+    # Save and show
+    plt.savefig("retail_sentiment_chart.png", dpi=150, bbox_inches='tight')
+    plt.show()
 
 else:
     print("No data available for the specified datetime range.")
