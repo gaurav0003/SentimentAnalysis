@@ -7,7 +7,7 @@ from datetime import datetime
 st.set_page_config(page_title="Dark Sentiment Dashboard", layout="wide")
 
 # Example CSV source
-CSV_URL = 'https://raw.githubusercontent.com/gaurav0003/SentimentAnalysis/refs/heads/main/crypto_data.csv'
+CSV_URL = 'https://raw.githubusercontent.com/yourusername/yourrepo/main/crypto_data.csv'
 df = pd.read_csv(CSV_URL)
 
 df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'], format='%Y-%m-%d %H:%M:%S')
@@ -23,8 +23,8 @@ end_datetime = datetime.combine(end_date, datetime.max.time())
 filtered_df = df[(df['DateTime'] >= start_datetime) & (df['DateTime'] <= end_datetime)]
 
 if not filtered_df.empty:
-    positive_funding = filtered_df['Positive Funding Rate']
-    negative_funding = filtered_df['Negative Funding Rate']
+    positive_funding = filtered_df['Greed']
+    negative_funding = filtered_df['Fear']
     datetimes = filtered_df['DateTime']
     sessions = filtered_df['Session']
 
@@ -45,21 +45,21 @@ if not filtered_df.empty:
     ax_pie.set_facecolor('#0e1117')
     ax_bar.set_facecolor('#0e1117')
 
-    fig.suptitle("📊 Retail Sentiment Analysis (Dark Mode)", fontsize=20, fontweight='bold', color='white', y=0.98)
+    fig.suptitle("📊 Crypto Sentiment Analysis (Dark Mode)", fontsize=20, fontweight='bold', color='white', y=0.98)
     fig.text(0.5, 0.93, f"{start_date.strftime('%d-%b-%Y')} ➜ {end_date.strftime('%d-%b-%Y')}",
              ha='center', fontsize=12, color='#bbbbbb')
-# Pie Chart
-pie_colors = ['#14b887', '#FF4C75']
-wedges, texts, autotexts = ax_pie.pie(
-    [total_positive, total_negative],
-    labels=['Bullish', 'Bearish'],
-    colors=pie_colors,
-    autopct='%1.1f%%',
-    startangle=140,
-    radius=1.2,
-    wedgeprops={'edgecolor': '#0e1117'},
-    textprops={'fontsize': 12, 'color': 'white'}
-)
+
+    # Pie Chart
+    pie_colors = ['#00996B', '#FF4C75']
+    wedges, texts, autotexts = ax_pie.pie([total_positive, total_negative],
+                                          labels=['People Greedy', 'People Afraid'],
+                                          colors=pie_colors,
+                                          autopct='%1.1f%%',
+                                          startangle=140,
+                                          radius=1.2,
+                                          wedgeprops={'edgecolor': '#0e1117'},
+                                          textprops={'fontsize': 12, 'color': 'white'})
+    ax_pie.set_title("Sentiment Share", fontsize=15, color='white')
 
     # Bar Chart
     ax_bar.set_ylim(min(negative_funding.min(), 0) * 1.2, positive_funding.max() * 1.2)
@@ -92,8 +92,8 @@ wedges, texts, autotexts = ax_pie.pie(
     ax_bar.legend(loc='upper left', facecolor='#1e1e1e', edgecolor='white', fontsize=10)
 
     fig.legend(handles=[
-        patches.Patch(color='#00FFB3', label='Bullish'),
-        patches.Patch(color='#FF4C75', label='Bearish')
+        patches.Patch(color='#00996B', label='Greed'),
+        patches.Patch(color='#FF4C75', label='Afraid')
     ], loc='upper right', fontsize=10, frameon=False)
 
     ax_bar.grid(True, linestyle='--', linewidth=0.5, alpha=0.4)
