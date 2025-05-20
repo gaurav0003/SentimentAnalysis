@@ -10,7 +10,7 @@ st.title("📊 Retail Market Sentiment Analysis")
 st.markdown("Visualizing positive and negative funding rates across sessions.")
 
 # --- Load dataset from GitHub ---
-github_raw_url = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/crypto_data.csv'  # <-- Replace this
+github_raw_url = 'https://raw.githubusercontent.com/gaurav0003/SentimentAnalysis/refs/heads/main/crypto_data.csv'  # <-- Replace this
 @st.cache_data
 def load_data():
     df = pd.read_csv(github_raw_url)
