@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from datetime import datetime
 
-st.set_page_config(page_title="Dark Sentiment Dashboard", layout="wide")
+st.set_page_config(page_title="Sentiment Dashboard", layout="wide")
 
 # Example CSV source
 CSV_URL = 'https://raw.githubusercontent.com/gaurav0003/SentimentAnalysis/refs/heads/main/crypto_data.csv'
@@ -45,7 +45,7 @@ if not filtered_df.empty:
     ax_pie.set_facecolor('#0e1117')
     ax_bar.set_facecolor('#0e1117')
 
-    fig.suptitle("📊 Crypto Sentiment Analysis (Dark Mode)", fontsize=20, fontweight='bold', color='white', y=0.98)
+    fig.suptitle("📊 Crypto Sentiment Analysis", fontsize=20, fontweight='bold', color='white', y=0.98)
     fig.text(0.5, 0.93, f"{start_date.strftime('%d-%b-%Y')} ➜ {end_date.strftime('%d-%b-%Y')}",
              ha='center', fontsize=12, color='#bbbbbb')
 
