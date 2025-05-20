@@ -1,4 +1,4 @@
-Date,Time,Session,Positive Funding Rate,Negative Funding Rate,Btc Current Price,BtcDom Current Price
+Date,Time,Session,Greed,Fear,Btc Current Price,BtcDom Current Price
 2024-08-10,09:48:38,Asia Session (9.30 am),0.0033420600000000017,-0.0035840500000000005,60327.81,2805.4
 2024-08-10,13:53:20,UK Session (1.30 pm),0.005181169999999999,-0.00646313,60759.32,2802.6
 2024-08-10,17:44:56,UK Session (5.30 pm),0.003919800000000004,-0.0036591899999999992,60833.66,2799.1
