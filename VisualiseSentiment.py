@@ -1,85 +1,50 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from datetime import datetime, timedelta
 import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
 
-# === CONFIG ===
-st.set_page_config(page_title="Retail Sentiment Visualizer", layout="wide")
+# Streamlit page config
+st.set_page_config(page_title="Crypto Sentiment Visualizer", layout="wide")
+st.title("📊 Crypto Sentiment Analysis")
 
-# === TITLE & INFO ===
-st.title("🧠 Retail Market Sentiment Analysis")
-st.markdown("""
-Welcome to the **Retail Market Sentiment Visualizer**!  
-This tool helps you analyze bullish and bearish funding sentiment over specific sessions.
+# Upload CSV
+uploaded_file = st.file_uploader("Upload your sentiment CSV file", type=["csv"])
 
-👉 **Select a date range** below and hit **Generate Chart** to visualize.
-""")
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
 
-# === DATE INPUTS ===
-default_start = datetime.now() - timedelta(days=1)
-default_end = datetime.now()
+    # Convert 'Datetime' column to datetime objects
+    df['Datetime'] = pd.to_datetime(df['Datetime'])
 
-start_datetime = st.datetime_input("📅 Start datetime", value=default_start)
-end_datetime = st.datetime_input("📅 End datetime", value=default_end)
+    # Date and time input for filtering
+    col1, col2 = st.columns(2)
+    with col1:
+        start_date = st.date_input("Start date", value=df['Datetime'].min().date())
+        start_time = st.time_input("Start time", value=datetime.now().time())
+    with col2:
+        end_date = st.date_input("End date", value=df['Datetime'].max().date())
+        end_time = st.time_input("End time", value=(datetime.now() + timedelta(hours=1)).time())
 
-# === SAMPLE DATA OPTION ===
-if st.checkbox("Use Sample Range"):
-    start_datetime = datetime(2024, 9, 1, 5, 30)
-    end_datetime = datetime(2024, 9, 2, 5, 30)
+    # Combine date and time
+    start_datetime = datetime.combine(start_date, start_time)
+    end_datetime = datetime.combine(end_date, end_time)
 
-# === UPLOAD FUNDING DATA ===
-uploaded_file = st.file_uploader("📤 Upload funding data CSV", type=["csv"])
+    # Filter DataFrame
+    filtered_df = df[(df['Datetime'] >= start_datetime) & (df['Datetime'] <= end_datetime)]
 
-if uploaded_file:
-    df = pd.read_csv(uploaded_file, parse_dates=["Time"])
-    df = df[(df["Time"] >= start_datetime) & (df["Time"] <= end_datetime)]
+    if filtered_df.empty:
+        st.warning("No data found for the selected date and time range.")
+    else:
+        # Display filtered data
+        st.subheader("Filtered Sentiment Data")
+        st.dataframe(filtered_df)
 
-    # === GROUP BY TIME ===
-    grouped_df = df.groupby("Time").agg({
-        "PositiveFR": "sum",
-        "NegativeFR": "sum",
-        "BTCUSDT": "first",
-        "BTCDOMUSDT": "first"
-    }).reset_index()
-
-    # === PLOTTING ===
-    fig, ax1 = plt.subplots(figsize=(18, 8))
-
-    # Bar chart for FR
-    ax1.bar(grouped_df["Time"], grouped_df["PositiveFR"], label="Positive FR", color="green")
-    ax1.bar(grouped_df["Time"], -grouped_df["NegativeFR"], label="Negative FR", color="red")
-    ax1.set_ylabel("Funding Rate (FR)")
-    ax1.set_xlabel("Time")
-    ax1.legend(loc="upper left")
-
-    # Line chart for BTCUSDT on secondary axis
-    ax2 = ax1.twinx()
-    ax2.plot(grouped_df["Time"], grouped_df["BTCUSDT"], color="blue", label="BTCUSDT Price", linewidth=2)
-    ax2.set_ylabel("BTC Price", color="blue")
-    ax2.tick_params(axis='y', labelcolor='blue')
-
-    # Format x-axis
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m %H:%M'))
-    fig.autofmt_xdate()
-
-    # === SESSION BACKGROUND ===
-    for i in range(len(grouped_df)):
-        session_time = grouped_df["Time"].iloc[i]
-        hour = session_time.hour
-        if 5 <= hour < 13:
-            color, label = "#e0f7fa", "Asia"
-        elif 13 <= hour < 21:
-            color, label = "#f1f8e9", "UK"
-        else:
-            color, label = "#fce4ec", "US"
-        ax1.axvspan(session_time, session_time + timedelta(hours=1), facecolor=color, alpha=0.3)
-
-    st.pyplot(fig)
-
-else:
-    st.warning("📂 Please upload a CSV file to generate the chart.")
-
-# === ERROR HANDLING ===
-if start_datetime > end_datetime:
-    st.error("❌ Start datetime must be earlier than end datetime.")
+        # Plotting
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.plot(filtered_df['Datetime'], filtered_df['Sentiment'], label='Sentiment', color='dodgerblue', marker='o')
+        ax.set_title("Crypto Sentiment Over Time", fontsize=16)
+        ax.set_xlabel("Datetime")
+        ax.set_ylabel("Sentiment Score")
+        ax.grid(True)
+        ax.legend()
+        st.pyplot(fig)
