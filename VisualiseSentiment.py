@@ -49,7 +49,7 @@ if not filtered_df.empty:
     fig.text(0.5, 0.93, f"{start_date.strftime('%d-%b-%Y')} ➜ {end_date.strftime('%d-%b-%Y')}",
              ha='center', fontsize=12, color='#bbbbbb')
 # Pie Chart
-pie_colors = ['#00FFB3', '#FF4C75']
+pie_colors = ['#14b887', '#FF4C75']
 wedges, texts, autotexts = ax_pie.pie(
     [total_positive, total_negative],
     labels=['Bullish', 'Bearish'],
@@ -60,12 +60,6 @@ wedges, texts, autotexts = ax_pie.pie(
     wedgeprops={'edgecolor': '#0e1117'},
     textprops={'fontsize': 12, 'color': 'white'}
 )
-
-# 🔥 Make % labels bold and bigger
-for autotext in autotexts:
-    autotext.set_color('white')
-    autotext.set_fontsize(14)
-    autotext.set_fontweight('bold')
 
     # Bar Chart
     ax_bar.set_ylim(min(negative_funding.min(), 0) * 1.2, positive_funding.max() * 1.2)
